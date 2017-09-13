@@ -1,0 +1,3 @@
+rootProject.name = 'support-db-requery-root'
+
+include ':support-db-requery'

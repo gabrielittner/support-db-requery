@@ -1,0 +1,35 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
+}
+
+ext {
+    running_on_ci = 'true'.equals(System.getenv('CI'))
+
+    version_java = JavaVersion.VERSION_1_7
+
+    version_android_minimum_sdk = 16
+    version_android_compile_sdk = 26
+    version_android_build_tools = '26.0.1'
+}
+
+ext.deps = [
+        support_db: 'android.arch.persistence.room:support-db:1.0.0-alpha9',
+        requery_db: 'io.requery:sqlite-android:3.20.0',
+
+        //test
+        junit: 'junit:junit:4.12',
+        truth: 'com.google.truth:truth:0.34',
+]
