@@ -26,7 +26,7 @@ ext {
 }
 
 ext.deps = [
-        support_db: 'android.arch.persistence.room:support-db:1.0.0-alpha9',
+        support_db: 'android.arch.persistence.room:db:1.0.0-alpha9-1',
         requery_db: 'io.requery:sqlite-android:3.20.0',
 
         //test
