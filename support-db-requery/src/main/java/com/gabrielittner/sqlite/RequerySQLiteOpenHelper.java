@@ -30,15 +30,12 @@ import io.requery.android.database.sqlite.SQLiteOpenHelper;
 class RequerySQLiteOpenHelper implements SupportSQLiteOpenHelper {
     private final OpenHelper mDelegate;
 
-    RequerySQLiteOpenHelper(Context context, String name, int version,
-                            DatabaseErrorHandler errorHandler,
-                            Callback callback) {
-        mDelegate = createDelegate(context, name, version, errorHandler, callback);
+    RequerySQLiteOpenHelper(Context context, String name, int version, Callback callback) {
+        mDelegate = createDelegate(context, name, version, callback);
     }
 
-    private OpenHelper createDelegate(Context context, String name,
-                                      int version, DatabaseErrorHandler errorHandler,
-                                      final Callback callback) {
+    private OpenHelper createDelegate(Context context, String name, int version, final Callback callback) {
+        DatabaseErrorHandler errorHandler = new CallbackDatabaseErrorHandler(callback);
         return new OpenHelper(context, name, null, version, errorHandler) {
             @Override
             public void onCreate(SQLiteDatabase sqLiteDatabase) {
@@ -125,6 +122,20 @@ class RequerySQLiteOpenHelper implements SupportSQLiteOpenHelper {
         public synchronized void close() {
             super.close();
             mWrappedDb = null;
+        }
+    }
+
+    private static final class CallbackDatabaseErrorHandler implements DatabaseErrorHandler {
+
+        private final SupportSQLiteOpenHelper.Callback callback;
+
+        CallbackDatabaseErrorHandler(SupportSQLiteOpenHelper.Callback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        public void onCorruption(SQLiteDatabase db) {
+            callback.onCorruption(db);
         }
     }
 }

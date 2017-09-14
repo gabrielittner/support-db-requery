@@ -27,9 +27,7 @@ import android.arch.persistence.db.SupportSQLiteOpenHelper;
 public class RequerySQLiteOpenHelperFactory implements SupportSQLiteOpenHelper.Factory {
     @Override
     public SupportSQLiteOpenHelper create(SupportSQLiteOpenHelper.Configuration configuration) {
-        return new RequerySQLiteOpenHelper(
-                configuration.context, configuration.name,
-                configuration.version, null, configuration.callback
-        );
+        return new RequerySQLiteOpenHelper(configuration.context, configuration.name,
+                configuration.version, configuration.callback);
     }
 }
