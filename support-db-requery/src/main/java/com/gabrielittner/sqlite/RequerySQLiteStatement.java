@@ -24,7 +24,7 @@ import io.requery.android.database.sqlite.SQLiteStatement;
 /**
  * Delegates all calls to a {@link SQLiteStatement}.
  */
-class RequerySQLiteStatement implements SupportSQLiteStatement {
+final class RequerySQLiteStatement implements SupportSQLiteStatement {
     private final SQLiteStatement mDelegate;
 
     /**

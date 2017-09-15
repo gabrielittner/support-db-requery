@@ -24,7 +24,7 @@ import io.requery.android.database.sqlite.SQLiteProgram;
 /**
  * An wrapper around {@link SQLiteProgram} to implement {@link SupportSQLiteProgram} API.
  */
-class RequerySQLiteProgram implements SupportSQLiteProgram {
+final class RequerySQLiteProgram implements SupportSQLiteProgram {
     private final SQLiteProgram mDelegate;
 
     RequerySQLiteProgram(SQLiteProgram delegate) {

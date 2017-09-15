@@ -27,7 +27,7 @@ import io.requery.android.database.DatabaseErrorHandler;
 import io.requery.android.database.sqlite.SQLiteDatabase;
 import io.requery.android.database.sqlite.SQLiteOpenHelper;
 
-class RequerySQLiteOpenHelper implements SupportSQLiteOpenHelper {
+final class RequerySQLiteOpenHelper implements SupportSQLiteOpenHelper {
     private final OpenHelper mDelegate;
 
     RequerySQLiteOpenHelper(Context context, String name, int version, Callback callback) {
@@ -91,7 +91,7 @@ class RequerySQLiteOpenHelper implements SupportSQLiteOpenHelper {
         mDelegate.close();
     }
 
-    abstract static class OpenHelper extends SQLiteOpenHelper {
+    private abstract static class OpenHelper extends SQLiteOpenHelper {
 
         RequerySQLiteDatabase mWrappedDb;
 

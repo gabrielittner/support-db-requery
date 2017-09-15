@@ -43,7 +43,7 @@ import io.requery.android.database.sqlite.SQLiteQuery;
  * Delegates all calls to an implementation of {@link SQLiteDatabase}.
  */
 @SuppressWarnings("unused")
-class RequerySQLiteDatabase implements SupportSQLiteDatabase {
+final class RequerySQLiteDatabase implements SupportSQLiteDatabase {
     private static final String[] CONFLICT_VALUES = new String[]
             {"", " OR ROLLBACK ", " OR ABORT ", " OR FAIL ", " OR IGNORE ", " OR REPLACE "};
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
