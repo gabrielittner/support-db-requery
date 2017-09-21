@@ -17,7 +17,9 @@ Instead of extending `SQLiteOpenHelper` you have to extend `SupportSQLiteOpenHel
 ```java
 class DbCallback extends SupportSQLiteOpenHelper.Callback {
 
-  static final int VERSION = 1;
+  public DbCallback(int version) {
+    super(version);
+  }
 
   @Override
   public void onCreate(SupportSQLiteDatabase db) {
@@ -38,7 +40,6 @@ Use that to create an instance of `SupportSQLiteOpenHelper.Configuration` and pa
 SupportSQLiteOpenHelper.Configuration config = SupportSQLiteOpenHelper.Configuration.builder(context)
     .name("database-name.db")
     .callback(new DbCallback())
-    .version(DbCallback.VERSION)
     .build();
 SupportSQLiteOpenHelper helper = new RequerySQLiteOpenHelperFactory().create(config);
 // use helper as usual

@@ -26,8 +26,7 @@ import android.arch.persistence.db.SupportSQLiteOpenHelper;
 @SuppressWarnings("unused")
 public final class RequerySQLiteOpenHelperFactory implements SupportSQLiteOpenHelper.Factory {
     @Override
-    public SupportSQLiteOpenHelper create(SupportSQLiteOpenHelper.Configuration configuration) {
-        return new RequerySQLiteOpenHelper(configuration.context, configuration.name,
-                configuration.version, configuration.callback);
+    public SupportSQLiteOpenHelper create(SupportSQLiteOpenHelper.Configuration config) {
+        return new RequerySQLiteOpenHelper(config.context, config.name, config.callback);
     }
 }

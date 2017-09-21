@@ -20,122 +20,108 @@ package com.gabrielittner.sqlite;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.db.SupportSQLiteOpenHelper;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import io.requery.android.database.DatabaseErrorHandler;
 import io.requery.android.database.sqlite.SQLiteDatabase;
 import io.requery.android.database.sqlite.SQLiteOpenHelper;
 
-final class RequerySQLiteOpenHelper implements SupportSQLiteOpenHelper {
-    private final OpenHelper mDelegate;
+class RequerySQLiteOpenHelper implements SupportSQLiteOpenHelper {
+    private final RequerySQLiteOpenHelper.OpenHelper mDelegate;
 
-    RequerySQLiteOpenHelper(Context context, String name, int version, Callback callback) {
-        mDelegate = createDelegate(context, name, version, callback);
+    RequerySQLiteOpenHelper(Context context, String name, Callback callback) {
+        this.mDelegate = this.createDelegate(context, name, callback);
     }
 
-    private OpenHelper createDelegate(Context context, String name, int version, final Callback callback) {
-        DatabaseErrorHandler errorHandler = new CallbackDatabaseErrorHandler(callback);
-        return new OpenHelper(context, name, null, version, errorHandler) {
-            @Override
-            public void onCreate(SQLiteDatabase sqLiteDatabase) {
-                mWrappedDb = new RequerySQLiteDatabase(sqLiteDatabase);
-                callback.onCreate(mWrappedDb);
-            }
-
-            @Override
-            public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-                callback.onUpgrade(getWrappedDb(sqLiteDatabase), oldVersion, newVersion);
-            }
-
-            @Override
-            public void onConfigure(SQLiteDatabase db) {
-                callback.onConfigure(getWrappedDb(db));
-            }
-
-            @Override
-            public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-                callback.onDowngrade(getWrappedDb(db), oldVersion, newVersion);
-            }
-
-            @Override
-            public void onOpen(SQLiteDatabase db) {
-                callback.onOpen(getWrappedDb(db));
-            }
-        };
+    private RequerySQLiteOpenHelper.OpenHelper createDelegate(Context context, String name, Callback callback) {
+        RequerySQLiteDatabase[] dbRef = new RequerySQLiteDatabase[1];
+        return new RequerySQLiteOpenHelper.OpenHelper(context, name, dbRef, callback);
     }
 
-    @Override
     public String getDatabaseName() {
-        return mDelegate.getDatabaseName();
+        return this.mDelegate.getDatabaseName();
     }
 
-    @Override
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @RequiresApi(
+            api = 16
+    )
     public void setWriteAheadLoggingEnabled(boolean enabled) {
-        mDelegate.setWriteAheadLoggingEnabled(enabled);
+        this.mDelegate.setWriteAheadLoggingEnabled(enabled);
     }
 
-    @Override
     public SupportSQLiteDatabase getWritableDatabase() {
-        return mDelegate.getWritableSupportDatabase();
+        return this.mDelegate.getWritableSupportDatabase();
     }
 
-    @Override
     public SupportSQLiteDatabase getReadableDatabase() {
-        return mDelegate.getReadableSupportDatabase();
+        return this.mDelegate.getReadableSupportDatabase();
     }
 
-    @Override
     public void close() {
-        mDelegate.close();
+        this.mDelegate.close();
     }
 
-    private abstract static class OpenHelper extends SQLiteOpenHelper {
+    static class OpenHelper extends SQLiteOpenHelper {
+        final RequerySQLiteDatabase[] mDbRef;
+        final Callback mCallback;
 
-        RequerySQLiteDatabase mWrappedDb;
+        OpenHelper(Context context, String name, final RequerySQLiteDatabase[] dbRef, final Callback callback) {
+            super(context, name, (SQLiteDatabase.CursorFactory)null, callback.version, new DatabaseErrorHandler() {
+                public void onCorruption(SQLiteDatabase dbObj) {
+                    RequerySQLiteDatabase db = dbRef[0];
+                    if(db != null) {
+                        callback.onCorruption(db);
+                    }
 
-        OpenHelper(Context context, String name,
-                   SQLiteDatabase.CursorFactory factory, int version,
-                   DatabaseErrorHandler errorHandler) {
-            super(context, name, factory, version, errorHandler);
+                }
+            });
+            this.mCallback = callback;
+            this.mDbRef = dbRef;
         }
 
         SupportSQLiteDatabase getWritableSupportDatabase() {
             SQLiteDatabase db = super.getWritableDatabase();
-            return getWrappedDb(db);
+            return this.getWrappedDb(db);
         }
 
         SupportSQLiteDatabase getReadableSupportDatabase() {
             SQLiteDatabase db = super.getReadableDatabase();
-            return getWrappedDb(db);
+            return this.getWrappedDb(db);
         }
 
         RequerySQLiteDatabase getWrappedDb(SQLiteDatabase sqLiteDatabase) {
-            if (mWrappedDb == null) {
-                mWrappedDb = new RequerySQLiteDatabase(sqLiteDatabase);
+            RequerySQLiteDatabase dbRef = this.mDbRef[0];
+            if(dbRef == null) {
+                dbRef = new RequerySQLiteDatabase(sqLiteDatabase);
+                this.mDbRef[0] = dbRef;
             }
-            return mWrappedDb;
+
+            return this.mDbRef[0];
         }
 
-        @Override
+        public void onCreate(SQLiteDatabase sqLiteDatabase) {
+            this.mCallback.onCreate(this.getWrappedDb(sqLiteDatabase));
+        }
+
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+            this.mCallback.onUpgrade(this.getWrappedDb(sqLiteDatabase), oldVersion, newVersion);
+        }
+
+        public void onConfigure(SQLiteDatabase db) {
+            this.mCallback.onConfigure(this.getWrappedDb(db));
+        }
+
+        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            this.mCallback.onDowngrade(this.getWrappedDb(db), oldVersion, newVersion);
+        }
+
+        public void onOpen(SQLiteDatabase db) {
+            this.mCallback.onOpen(this.getWrappedDb(db));
+        }
+
         public synchronized void close() {
             super.close();
-            mWrappedDb = null;
-        }
-    }
-
-    private static final class CallbackDatabaseErrorHandler implements DatabaseErrorHandler {
-
-        private final SupportSQLiteOpenHelper.Callback callback;
-
-        CallbackDatabaseErrorHandler(SupportSQLiteOpenHelper.Callback callback) {
-            this.callback = callback;
-        }
-
-        @Override
-        public void onCorruption(SQLiteDatabase db) {
-            callback.onCorruption(db);
+            this.mDbRef[0] = null;
         }
     }
 }
