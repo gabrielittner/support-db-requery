@@ -31,7 +31,7 @@ ext {
 
 ext.deps = [
         support_db: 'android.arch.persistence:db:1.0.0',
-        requery_db: 'io.requery:sqlite-android:3.20.0',
+        requery_db: 'io.requery:sqlite-android:3.21.0',
 
         //test
         junit: 'junit:junit:4.12',
