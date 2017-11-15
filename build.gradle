@@ -1,17 +1,21 @@
 buildscript {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     }
 }
+apply plugin: 'com.github.ben-manes.versions'
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
+        jcenter()
     }
 }
 
@@ -21,15 +25,15 @@ ext {
     version_java = JavaVersion.VERSION_1_7
 
     version_android_minimum_sdk = 14
-    version_android_compile_sdk = 26
-    version_android_build_tools = '26.0.1'
+    version_android_compile_sdk = 27
+    version_android_build_tools = '27.0.1'
 }
 
 ext.deps = [
-        support_db: 'android.arch.persistence:db:1.0.0-beta1',
+        support_db: 'android.arch.persistence:db:1.0.0',
         requery_db: 'io.requery:sqlite-android:3.20.0',
 
         //test
         junit: 'junit:junit:4.12',
-        truth: 'com.google.truth:truth:0.34',
+        truth: 'com.google.truth:truth:0.36',
 ]

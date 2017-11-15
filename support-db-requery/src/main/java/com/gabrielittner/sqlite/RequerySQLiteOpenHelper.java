@@ -66,7 +66,7 @@ class RequerySQLiteOpenHelper implements SupportSQLiteOpenHelper {
         final Callback mCallback;
 
         OpenHelper(Context context, String name, final RequerySQLiteDatabase[] dbRef, final Callback callback) {
-            super(context, name, (SQLiteDatabase.CursorFactory)null, callback.version, new DatabaseErrorHandler() {
+            super(context, name, null, callback.version, new DatabaseErrorHandler() {
                 public void onCorruption(SQLiteDatabase dbObj) {
                     RequerySQLiteDatabase db = dbRef[0];
                     if(db != null) {
