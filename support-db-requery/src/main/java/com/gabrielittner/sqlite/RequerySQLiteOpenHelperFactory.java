@@ -22,11 +22,22 @@ import android.arch.persistence.db.SupportSQLiteOpenHelper;
 /**
  * Implements {@link SupportSQLiteOpenHelper.Factory} using the SQLite implementation in the
  * framework.
+ *
+ * @deprecated use {@link io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory} instead
  */
 @SuppressWarnings("unused")
+@Deprecated
 public final class RequerySQLiteOpenHelperFactory implements SupportSQLiteOpenHelper.Factory {
+
+    private final io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory factory =
+            new io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory();
+
+    /**
+     * @deprecated use {@link io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory} instead
+     */
+    @Deprecated
     @Override
     public SupportSQLiteOpenHelper create(SupportSQLiteOpenHelper.Configuration config) {
-        return new RequerySQLiteOpenHelper(config.context, config.name, config.callback);
+        return factory.create(config);
     }
 }
