@@ -81,7 +81,7 @@ Currently not supported, keep an eye on: https://github.com/square/sqldelight/is
 Add a Gradle dependency:
 
 ```groovy
-compile 'com.gabrielittner.sqlite:support-db-requery:0.1.0-SNAPSHOT'
+compile 'com.gabrielittner.sqlite:support-db-requery:0.1.0'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
