@@ -67,11 +67,11 @@ Room.databaseBuilder(context, YourDatabase.class, "database-name")
 
 ### SQL Brite
 
-Using this library requires version `3.0.0` of SQL Brite. Create the helper as described in
+Using this library requires version `3.0.0` of SQL Brite. Create the `SupportSQLiteOpenHelper` as described in
 [regular usage](#regular-usage) and pass it into `wrapDatabaseHelper`:
 
 ```java
-SupportSQLiteOpenHelper helper = new RequerySQLiteOpenHelperFactory().create(config);
+SupportSQLiteOpenHelper helper = ... // see above
 BriteDatabase db = sqlBrite.wrapDatabaseHelper(helper, Schedulers.io());
 ```
 
