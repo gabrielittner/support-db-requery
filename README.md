@@ -67,8 +67,7 @@ Room.databaseBuilder(context, YourDatabase.class, "database-name")
 
 ### SQL Brite
 
-Using this library requires version 3 of SQL Brite, which is currently only available as a snapshot
-(`compile 'com.squareup.sqlbrite3:sqlbrite:3.0.0-SNAPSHOT'`). Create the helper as described in
+Using this library requires version `3.0.0` of SQL Brite. Create the helper as described in
 [regular usage](#regular-usage) and pass it into `wrapDatabaseHelper`:
 
 ```java
