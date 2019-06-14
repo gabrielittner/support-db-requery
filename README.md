@@ -1,15 +1,15 @@
-# support-db-requery
-
-A wrapper around [Requery's sqlite-android library](https://github.com/requery/sqlite-android)
-that implements `SupportSQLite` interfaces from the support library. This allows you to ship your
-own version of SQLite and use it with a shared platform independent API.
-
 # Deprecated
 
 sqlite-android implements the support interfaces directly starting with version `3.21.0`
 which means this wrapper is no longer needed. You can migrate by removing this dependency and
 changing imports of `com.gabrielittner.sqlite.RequerySQLiteOpenHelperFactory` to
 `io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory`.
+
+# support-db-requery
+
+A wrapper around [Requery's sqlite-android library](https://github.com/requery/sqlite-android)
+that implements `SupportSQLite` interfaces from the support library. This allows you to ship your
+own version of SQLite and use it with a shared platform independent API.
 
 ## Usage
 
